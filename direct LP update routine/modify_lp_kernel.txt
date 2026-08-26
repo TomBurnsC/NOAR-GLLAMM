@@ -1,0 +1,21 @@
+
+__kernel void modify_lp ( double delta,
+			  unsigned int index,
+			  unsigned int cols,
+			  __global double *data,
+			  __global double *lp,
+			  __global double *point_matrix) {
+
+  ulong gi = get_global_id(0);
+  ulong gj = get_global_id(1);
+  ulong obs = get_global_size(0);
+  ulong pts = get_global_size(1);
+  double change = data[gi*cols + index]*delta;
+  
+  if (point_matrix != NULL) {
+    change *= point_matrix[pts*index + gj];
+  }
+  
+  lp[gi*pts + gj] += change;  
+  
+}
