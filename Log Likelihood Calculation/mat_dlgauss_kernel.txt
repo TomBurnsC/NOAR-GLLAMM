@@ -1,0 +1,18 @@
+#line 6663 "ocgllamm.nw"
+__kernel void mat_dlgauss(
+    __global const double * obs,
+    __global const double * pred,
+    __global double       * likelihoods,
+    const unsigned int cols,
+    const double inv_2sigma2,
+    const double gauss_const)
+{
+    const ulong gid = get_global_id(0);
+    const ulong col = get_global_id(1);
+
+    const ulong idx = gid * cols + col;
+
+    const double r = obs[gid] - pred[idx];
+
+    likelihoods[idx] = r * r * inv_2sigma2 + gauss_const;
+}
